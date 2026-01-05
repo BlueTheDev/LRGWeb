@@ -70,6 +70,7 @@
             text-decoration: none;
             transition: all 0.3s;
             position: relative;
+            cursor: pointer;
         }
 
         .nav-links a::after {
@@ -192,10 +193,56 @@
             line-height: 1.5;
         }
 
-        .download-btn {
-            width: 100%;
+        .button-group {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .purchase-btn {
+            flex: 1;
             padding: 0.8rem;
             background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            border: none;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .purchase-btn:disabled {
+            background: rgba(107, 114, 128, 0.5);
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        .purchase-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            transition: left 0.5s;
+        }
+
+        .purchase-btn:not(:disabled):hover::before {
+            left: 100%;
+        }
+
+        .purchase-btn:not(:disabled):hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(16, 185, 129, 0.4);
+        }
+
+        .download-btn {
+            flex: 1;
+            padding: 0.8rem;
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
             border: none;
             border-radius: 10px;
             color: #fff;
@@ -224,125 +271,29 @@
 
         .download-btn:hover {
             transform: scale(1.05);
-            box-shadow: 0 5px 20px rgba(16, 185, 129, 0.4);
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(5px);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .modal.active {
-            display: flex;
-        }
-
-        .modal-content {
-            background: rgba(26, 41, 64, 0.95);
-            backdrop-filter: blur(20px);
-            padding: 3rem;
-            border-radius: 20px;
-            max-width: 500px;
-            width: 90%;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            animation: fadeIn 0.4s ease;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-        }
-
-        .modal-content h2 {
-            margin-bottom: 1.5rem;
-            color: #60a5fa;
-            font-size: 2rem;
-        }
-
-        .input-field {
-            width: 100%;
-            padding: 0.9rem;
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 10px;
-            color: #fff;
-            font-size: 1rem;
-            margin-bottom: 1rem;
-            transition: all 0.3s;
-        }
-
-        .input-field:focus {
-            outline: none;
-            border-color: #60a5fa;
-            background: rgba(255, 255, 255, 0.12);
-            box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
-        }
-
-        .btn {
-            width: 100%;
-            padding: 0.9rem;
-            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-            border: none;
-            border-radius: 10px;
-            color: #fff;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.2);
-            transition: left 0.5s;
-        }
-
-        .btn:hover::before {
-            left: 100%;
-        }
-
-        .btn:hover {
-            transform: scale(1.02);
             box-shadow: 0 5px 20px rgba(59, 130, 246, 0.4);
         }
 
-        .btn:disabled {
-            background: rgba(59, 130, 246, 0.5);
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.1);
-            margin-top: 0.5rem;
-        }
-
-        .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.15);
-        }
-
         .discord-btn {
+            width: 100%;
+            padding: 1rem;
             background: linear-gradient(135deg, #5865F2 0%, #4752C4 100%);
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 0.5rem;
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
         }
 
         .discord-btn:hover {
-            box-shadow: 0 5px 20px rgba(88, 101, 242, 0.4);
+            transform: scale(1.02);
+            box-shadow: 0 10px 30px rgba(88, 101, 242, 0.4);
         }
 
         .login-screen {
@@ -382,47 +333,6 @@
             display: none;
         }
 
-        .info-text {
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 0.9rem;
-            line-height: 1.6;
-            margin-bottom: 1rem;
-        }
-
-        .error-message {
-            background: rgba(239, 68, 68, 0.15);
-            border: 1px solid #ef4444;
-            padding: 1rem;
-            border-radius: 10px;
-            margin-bottom: 1rem;
-            color: #fca5a5;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .success-message {
-            background: rgba(34, 197, 94, 0.15);
-            border: 1px solid #22c55e;
-            padding: 1rem;
-            border-radius: 10px;
-            margin-bottom: 1rem;
-            color: #86efac;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top-color: #fff;
-            animation: spin 1s ease-in-out infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
         .logout-btn {
             background: rgba(239, 68, 68, 0.15);
             border: 1px solid #ef4444;
@@ -438,24 +348,31 @@
             transform: scale(1.05);
         }
 
-        .divider {
-            display: flex;
-            align-items: center;
-            margin: 1.5rem 0;
-            color: rgba(255, 255, 255, 0.5);
+        .no-products {
+            text-align: center;
+            padding: 4rem 2rem;
+            animation: fadeIn 0.8s ease;
         }
 
-        .divider::before,
-        .divider::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: rgba(255, 255, 255, 0.2);
+        .no-products h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: rgba(255, 255, 255, 0.9);
         }
 
-        .divider span {
-            padding: 0 1rem;
-            font-size: 0.9rem;
+        .no-products p {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 1.1rem;
+        }
+
+        .owned-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
         }
     </style>
 </head>
@@ -465,14 +382,12 @@
         <div class="login-card">
             <h1>👋 Hey!</h1>
             <p>Welcome to LRG Portal</p>
-            <button class="btn discord-btn" onclick="loginWithDiscord()">
-                <svg width="20" height="20" viewBox="0 0 71 55" fill="none">
+            <button class="discord-btn" onclick="loginWithDiscord()">
+                <svg width="24" height="24" viewBox="0 0 71 55" fill="none">
                     <path d="M60.1045 4.8978C55.5792 2.8214 50.7265 1.2916 45.6527 0.41542C45.5603 0.39851 45.468 0.440769 45.4204 0.525289C44.7963 1.6353 44.105 3.0834 43.6209 4.2216C38.1637 3.4046 32.7345 3.4046 27.3892 4.2216C26.905 3.0581 26.1886 1.6353 25.5617 0.525289C25.5141 0.443589 25.4218 0.40133 25.3294 0.41542C20.2584 1.2888 15.4057 2.8186 10.8776 4.8978C10.8384 4.9147 10.8048 4.9429 10.7825 4.9795C1.57795 18.7309 -0.943561 32.1443 0.293408 45.3914C0.299005 45.4562 0.335386 45.5182 0.385761 45.5576C6.45866 50.0174 12.3413 52.7249 18.1147 54.5195C18.2071 54.5477 18.305 54.5139 18.3638 54.4378C19.7295 52.5728 20.9469 50.6063 21.9907 48.5383C22.0523 48.4172 21.9935 48.2735 21.8676 48.2256C19.9366 47.4931 18.0979 46.6 16.3292 45.5858C16.1893 45.5041 16.1781 45.304 16.3068 45.2082C16.679 44.9293 17.0513 44.6391 17.4067 44.3461C17.471 44.2926 17.5606 44.2813 17.6362 44.3151C29.2558 49.6202 41.8354 49.6202 53.3179 44.3151C53.3935 44.2785 53.4831 44.2898 53.5502 44.3433C53.9057 44.6363 54.2779 44.9293 54.6529 45.2082C54.7816 45.304 54.7732 45.5041 54.6333 45.5858C52.8646 46.6197 51.0259 47.4931 49.0921 48.2228C48.9662 48.2707 48.9102 48.4172 48.9718 48.5383C50.038 50.6034 51.2554 52.5699 52.5959 54.435C52.6519 54.5139 52.7526 54.5477 52.845 54.5195C58.6464 52.7249 64.529 50.0174 70.6019 45.5576C70.6551 45.5182 70.6887 45.459 70.6943 45.3942C72.1747 30.0791 68.2147 16.7757 60.1968 4.9823C60.1772 4.9429 60.1437 4.9147 60.1045 4.8978Z" fill="currentColor"/>
                 </svg>
                 Login with Discord
             </button>
-            <div class="divider"><span>or</span></div>
-            <button class="btn btn-secondary" onclick="showVerifyModal()">Login with Username</button>
         </div>
     </div>
 
@@ -481,8 +396,8 @@
         <nav class="navbar">
             <div class="logo">🏢 LRG</div>
             <div class="nav-links">
-                <a href="#" onclick="showHome()">Home</a>
-                <a href="#" onclick="showProducts()">My Products</a>
+                <a onclick="showHome()">Home</a>
+                <a onclick="showProducts()">My Products</a>
                 <div class="user-info">
                     <img id="userAvatar" class="user-avatar" src="" alt="Avatar">
                     <span id="userInfo"></span>
@@ -492,85 +407,87 @@
         </nav>
 
         <div class="container">
+            <!-- Home Section -->
             <div id="homeSection">
                 <div class="welcome-section">
                     <h1>👋 Hey, <span id="userName"></span>!</h1>
                     <p>Welcome back! Check out our products.</p>
                 </div>
 
-                <div class="products-grid">
-                    <div class="product-card">
-                        <div class="product-image">📦</div>
-                        <div class="product-content">
-                            <h3 class="product-title">LRG Basic Bundle</h3>
-                            <p class="product-description">The perfect starter package for your business. Contains all basic features for a successful start.</p>
-                            <button class="download-btn" onclick="downloadProduct('LRG Basic Bundle')">Download</button>
-                        </div>
-                    </div>
-
-                    <div class="product-card">
-                        <div class="product-image">⬆️</div>
-                        <div class="product-content">
-                            <h3 class="product-title">LRG Upgrade Bundle</h3>
-                            <p class="product-description">Advanced features and premium functions for experienced users. Take your experience to the next level.</p>
-                            <button class="download-btn" onclick="downloadProduct('LRG Upgrade Bundle')">Download</button>
-                        </div>
-                    </div>
-
-                    <div class="product-card">
-                        <div class="product-image">🚗</div>
-                        <div class="product-content">
-                            <h3 class="product-title">Travel System</h3>
-                            <p class="product-description">Innovative travel system for seamless mobility. Perfect for dynamic environments and fast movement.</p>
-                            <button class="download-btn" onclick="downloadProduct('Travel System')">Download</button>
-                        </div>
-                    </div>
-
-                    <div class="product-card">
-                        <div class="product-image">🪑</div>
-                        <div class="product-content">
-                            <h3 class="product-title">Furniture Pack</h3>
-                            <p class="product-description">Comprehensive furniture collection for stylish interiors. Contains modern and functional designs for every room.</p>
-                            <button class="download-btn" onclick="downloadProduct('Furniture Pack')">Download</button>
-                        </div>
-                    </div>
-                </div>
+                <div class="products-grid" id="allProductsGrid"></div>
             </div>
-        </div>
-    </div>
 
-    <!-- Verify Modal -->
-    <div id="verifyModal" class="modal">
-        <div class="modal-content">
-            <h2>Login</h2>
-            <div id="loginMessage"></div>
-            <p class="info-text">Enter your username to login:</p>
-            <input type="text" class="input-field" id="loginUsername" placeholder="Username">
-            <button class="btn" id="loginBtn" onclick="verifyLogin()">Login</button>
-            <button class="btn btn-secondary" onclick="closeModal('verifyModal')">Cancel</button>
+            <!-- My Products Section -->
+            <div id="productsSection" class="hidden">
+                <div class="welcome-section">
+                    <h1>📦 My Products</h1>
+                    <p>Products you own and can download</p>
+                </div>
+                <div id="ownedProductsContainer"></div>
+            </div>
         </div>
     </div>
 
     <script>
         const CLIENT_ID = '1457730077046603907';
         const REDIRECT_URI = window.location.origin + window.location.pathname;
-        let currentUser = null;
-        let registeredUsers = JSON.parse(localStorage.getItem('registeredUsers') || '{}');
+        
+        const ADMIN_USERS = ['blueesworld', '.poke'];
+        
+        const PRODUCTS = [
+            {
+                id: 'furniture-pack',
+                name: 'Furniture Pack',
+                emoji: '🪑',
+                description: 'Comprehensive furniture collection for stylish interiors. Contains modern and functional designs for every room.',
+                gamepassUrl: 'https://www.roblox.com/game-pass/970395648'
+            },
+            {
+                id: 'travel-system',
+                name: 'Travel System',
+                emoji: '🚗',
+                description: 'Innovative travel system for seamless mobility. Perfect for dynamic environments and fast movement.',
+                gamepassUrl: 'https://www.roblox.com/game-pass/970396147'
+            },
+            {
+                id: 'restaurant-bundle',
+                name: 'Restaurant Bundle',
+                emoji: '🍽️',
+                description: 'Complete restaurant package with everything you need. From kitchen equipment to dining furniture.',
+                gamepassUrl: 'https://www.roblox.com/game-pass/970396397'
+            },
+            {
+                id: 'basic-bundle',
+                name: 'LRG Basic Bundle',
+                emoji: '📦',
+                description: 'The perfect starter package for your business. Contains all basic features for a successful start.',
+                gamepassUrl: 'https://www.roblox.com/game-pass/970396675'
+            },
+            {
+                id: 'upgrade-bundle',
+                name: 'LRG Upgrade Bundle',
+                emoji: '⬆️',
+                description: 'Advanced features and premium functions for experienced users. Take your experience to the next level.',
+                gamepassUrl: null
+            }
+        ];
 
-        window.onload = function() {
-            // Check for Discord OAuth callback
+        let currentUser = null;
+        let currentView = 'home';
+
+        window.onload = async function() {
             const fragment = new URLSearchParams(window.location.hash.slice(1));
             const accessToken = fragment.get('access_token');
             
             if (accessToken) {
-                handleDiscordCallback(accessToken);
+                await handleDiscordCallback(accessToken);
                 return;
             }
 
-            // Check if user is already logged in
             const savedUser = localStorage.getItem('currentUser');
             if (savedUser) {
                 currentUser = JSON.parse(savedUser);
+                await loadUserData();
                 showMainApp();
             }
         };
@@ -595,18 +512,17 @@
                 currentUser = {
                     username: userData.username,
                     userId: userData.id,
+                    globalName: userData.global_name || userData.username,
                     avatar: userData.avatar 
                         ? `https://cdn.discordapp.com/avatars/${userData.id}/${userData.avatar}.png`
-                        : `https://cdn.discordapp.com/embed/avatars/${userData.discriminator % 5}.png`,
-                    platform: 'discord',
-                    registeredAt: new Date().toISOString()
+                        : `https://cdn.discordapp.com/embed/avatars/${(parseInt(userData.discriminator) || 0) % 5}.png`,
+                    isAdmin: ADMIN_USERS.includes(userData.username),
+                    ownedProducts: []
                 };
 
-                registeredUsers[userData.id] = currentUser;
-                localStorage.setItem('registeredUsers', JSON.stringify(registeredUsers));
+                await saveUserData();
                 localStorage.setItem('currentUser', JSON.stringify(currentUser));
 
-                // Clear the hash from URL
                 window.history.replaceState(null, null, window.location.pathname);
                 
                 showMainApp();
@@ -617,48 +533,153 @@
             }
         }
 
-        function showVerifyModal() {
-            document.getElementById('verifyModal').classList.add('active');
-            document.getElementById('loginMessage').innerHTML = '';
+        async function saveUserData() {
+            try {
+                const users = JSON.parse(localStorage.getItem('allUsers') || '{}');
+                users[currentUser.userId] = currentUser;
+                localStorage.setItem('allUsers', JSON.stringify(users));
+            } catch (error) {
+                console.error('Error saving user data:', error);
+            }
         }
 
-        function closeModal(modalId) {
-            document.getElementById(modalId).classList.remove('active');
+        async function loadUserData() {
+            try {
+                const users = JSON.parse(localStorage.getItem('allUsers') || '{}');
+                const savedUser = users[currentUser.userId];
+                if (savedUser) {
+                    currentUser.ownedProducts = savedUser.ownedProducts || [];
+                    currentUser.isAdmin = ADMIN_USERS.includes(currentUser.username);
+                }
+            } catch (error) {
+                console.error('Error loading user data:', error);
+            }
         }
 
-        function verifyLogin() {
-            const username = document.getElementById('loginUsername').value.trim();
-            const messageDiv = document.getElementById('loginMessage');
+        function userOwnsProduct(productId) {
+            if (currentUser.isAdmin) return true;
+            return currentUser.ownedProducts && currentUser.ownedProducts.includes(productId);
+        }
 
-            if (!username) {
-                messageDiv.innerHTML = '<div class="error-message">Please enter your username</div>';
+        function purchaseProduct(productId, gamepassUrl) {
+            if (!gamepassUrl) return;
+            
+            if (!currentUser.ownedProducts) {
+                currentUser.ownedProducts = [];
+            }
+            
+            if (!currentUser.ownedProducts.includes(productId)) {
+                currentUser.ownedProducts.push(productId);
+                saveUserData();
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            }
+            
+            window.open(gamepassUrl, '_blank');
+            
+            setTimeout(() => {
+                renderProducts();
+            }, 1000);
+        }
+
+        function downloadProduct(productName) {
+            alert(`Downloading ${productName}... This is a demo. In production, this would trigger the actual download.`);
+        }
+
+        function renderProducts() {
+            const grid = document.getElementById('allProductsGrid');
+            grid.innerHTML = '';
+
+            PRODUCTS.forEach(product => {
+                const owned = userOwnsProduct(product.id);
+                const hasGamepass = product.gamepassUrl !== null;
+                
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.innerHTML = `
+                    <div class="product-image">${product.emoji}</div>
+                    <div class="product-content">
+                        ${owned ? '<div class="owned-badge">✓ Owned</div>' : ''}
+                        <h3 class="product-title">${product.name}</h3>
+                        <p class="product-description">${product.description}</p>
+                        <div class="button-group">
+                            <button class="purchase-btn" 
+                                    onclick="purchaseProduct('${product.id}', '${product.gamepassUrl}')"
+                                    ${!hasGamepass ? 'disabled' : ''}>
+                                Purchase
+                            </button>
+                            <button class="download-btn" 
+                                    onclick="downloadProduct('${product.name}')"
+                                    ${!owned ? 'style="display:none"' : ''}>
+                                Download
+                            </button>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function renderOwnedProducts() {
+            const container = document.getElementById('ownedProductsContainer');
+            const ownedProducts = PRODUCTS.filter(p => userOwnsProduct(p.id));
+
+            if (ownedProducts.length === 0) {
+                container.innerHTML = `
+                    <div class="no-products">
+                        <h2>📭 No Products Owned</h2>
+                        <p>You haven't purchased any products yet. Check out our available products!</p>
+                    </div>
+                `;
                 return;
             }
 
-            // Simple username login (for demo purposes)
-            currentUser = {
-                username: username,
-                userId: 'user_' + Date.now(),
-                avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(username)}&background=60a5fa&color=fff&size=150`,
-                platform: 'username',
-                registeredAt: new Date().toISOString()
-            };
-
-            localStorage.setItem('currentUser', JSON.stringify(currentUser));
-            messageDiv.innerHTML = '<div class="success-message">Login successful!</div>';
+            const grid = document.createElement('div');
+            grid.className = 'products-grid';
             
-            setTimeout(() => {
-                closeModal('verifyModal');
-                showMainApp();
-            }, 1000);
+            ownedProducts.forEach(product => {
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.innerHTML = `
+                    <div class="product-image">${product.emoji}</div>
+                    <div class="product-content">
+                        <div class="owned-badge">✓ Owned</div>
+                        <h3 class="product-title">${product.name}</h3>
+                        <p class="product-description">${product.description}</p>
+                        <button class="download-btn" onclick="downloadProduct('${product.name}')">
+                            Download
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+
+            container.innerHTML = '';
+            container.appendChild(grid);
         }
 
         function showMainApp() {
             document.getElementById('loginScreen').classList.add('hidden');
             document.getElementById('mainApp').classList.remove('hidden');
-            document.getElementById('userName').textContent = currentUser.username;
+            document.getElementById('userName').textContent = currentUser.globalName || currentUser.username;
             document.getElementById('userInfo').textContent = currentUser.username;
             document.getElementById('userAvatar').src = currentUser.avatar;
+            
+            renderProducts();
+            showHome();
+        }
+
+        function showHome() {
+            currentView = 'home';
+            document.getElementById('homeSection').classList.remove('hidden');
+            document.getElementById('productsSection').classList.add('hidden');
+            renderProducts();
+        }
+
+        function showProducts() {
+            currentView = 'products';
+            document.getElementById('homeSection').classList.add('hidden');
+            document.getElementById('productsSection').classList.remove('hidden');
+            renderOwnedProducts();
         }
 
         function logout() {
@@ -666,18 +687,6 @@
             currentUser = null;
             document.getElementById('loginScreen').classList.remove('hidden');
             document.getElementById('mainApp').classList.add('hidden');
-        }
-
-        function showHome() {
-            document.getElementById('homeSection').classList.remove('hidden');
-        }
-
-        function showProducts() {
-            document.getElementById('homeSection').classList.remove('hidden');
-        }
-
-        function downloadProduct(productName) {
-            alert(`Downloading ${productName}... This is a demo. In production, this would trigger the actual download.`);
         }
     </script>
 </body>
