@@ -374,6 +374,160 @@
             font-weight: 600;
             margin-bottom: 0.5rem;
         }
+
+        .admin-table {
+            background: rgba(26, 41, 64, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            overflow-x: auto;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .admin-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .admin-table th {
+            background: rgba(96, 165, 250, 0.2);
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .admin-table td {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .admin-table tr:hover {
+            background: rgba(96, 165, 250, 0.05);
+        }
+
+        .license-toggle {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid #ef4444;
+            color: #fca5a5;
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+            margin: 0.2rem;
+        }
+
+        .license-toggle.active {
+            background: rgba(16, 185, 129, 0.2);
+            border-color: #10b981;
+            color: #6ee7b7;
+        }
+
+        .license-toggle:hover {
+            transform: scale(1.05);
+        }
+
+        .user-row {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .user-avatar-small {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid rgba(96, 165, 250, 0.3);
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: rgba(26, 41, 64, 0.9);
+            padding: 2rem;
+            border-radius: 16px;
+            max-width: 500px;
+            width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+        }
+
+        .modal-content h2 {
+            margin-bottom: 1rem;
+            color: #60a5fa;
+        }
+
+        .modal-content p {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+
+        .modal-btn {
+            padding: 0.8rem 1.5rem;
+            background: #3b82f6;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 1rem;
+            width: 100%;
+        }
+
+        .modal-btn:hover {
+            background: #2563eb;
+            transform: scale(1.02);
+        }
+
+        .error {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid #ef4444;
+            color: #fca5a5;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .success {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid #10b981;
+            color: #6ee7b7;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
     </style>
 </head>
 <body>
@@ -398,6 +552,7 @@
             <div class="nav-links">
                 <a onclick="showHome()">Home</a>
                 <a onclick="showProducts()">My Products</a>
+                <a onclick="showAdmin()" id="adminLink" class="hidden">Admin Panel</a>
                 <div class="user-info">
                     <img id="userAvatar" class="user-avatar" src="" alt="Avatar">
                     <span id="userInfo"></span>
@@ -425,12 +580,33 @@
                 </div>
                 <div id="ownedProductsContainer"></div>
             </div>
+
+            <!-- Admin Section -->
+            <div id="adminSection" class="hidden">
+                <div class="welcome-section">
+                    <h1>🔐 Admin Panel</h1>
+                    <p>Manage users and their product licenses</p>
+                </div>
+                <div id="adminContainer"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Verification Modal -->
+    <div id="verifyModal" class="modal">
+        <div class="modal-content">
+            <h2>Verify Gamepass Purchase</h2>
+            <p id="verifyModalText">Please verify that you have purchased the gamepass. Make sure your Discord account is linked to Roblox via Bloxlink and your Roblox inventory is set to public.</p>
+            <div id="verifyStatus"></div>
+            <button class="modal-btn" onclick="verifyGamepassPurchase()" id="verifyBtn">Verify Purchase</button>
+            <button class="modal-btn" onclick="closeModal('verifyModal')" style="background: rgba(255, 255, 255, 0.1); margin-top: 0.5rem;">Cancel</button>
         </div>
     </div>
 
     <script>
         const CLIENT_ID = '1457730077046603907';
         const REDIRECT_URI = window.location.origin + window.location.pathname;
+        const BLOXLINK_API_KEY = '6458e379-4c87-40b8-82a3-6043938751c9';
         
         const ADMIN_USERS = ['blueesworld', '.poke'];
         
@@ -440,48 +616,59 @@
                 name: 'Furniture Pack',
                 emoji: '🪑',
                 description: 'Comprehensive furniture collection for stylish interiors. Contains modern and functional designs for every room.',
-                gamepassUrl: 'https://www.roblox.com/game-pass/970395648'
+                gamepassUrl: 'https://www.roblox.com/game-pass/970395648',
+                gamepassId: 970395648
             },
             {
                 id: 'travel-system',
                 name: 'Travel System',
                 emoji: '🚗',
                 description: 'Innovative travel system for seamless mobility. Perfect for dynamic environments and fast movement.',
-                gamepassUrl: 'https://www.roblox.com/game-pass/970396147'
+                gamepassUrl: 'https://www.roblox.com/game-pass/970396147',
+                gamepassId: 970396147
             },
             {
                 id: 'restaurant-bundle',
                 name: 'Restaurant Bundle',
                 emoji: '🍽️',
                 description: 'Complete restaurant package with everything you need. From kitchen equipment to dining furniture.',
-                gamepassUrl: 'https://www.roblox.com/game-pass/970396397'
+                gamepassUrl: 'https://www.roblox.com/game-pass/970396397',
+                gamepassId: 970396397
             },
             {
                 id: 'basic-bundle',
                 name: 'LRG Basic Bundle',
                 emoji: '📦',
                 description: 'The perfect starter package for your business. Contains all basic features for a successful start.',
-                gamepassUrl: 'https://www.roblox.com/game-pass/970396675'
+                gamepassUrl: 'https://www.roblox.com/game-pass/970396675',
+                gamepassId: 970396675
             },
             {
                 id: 'upgrade-bundle',
                 name: 'LRG Upgrade Bundle',
                 emoji: '⬆️',
                 description: 'Advanced features and premium functions for experienced users. Take your experience to the next level.',
-                gamepassUrl: null
+                gamepassUrl: null,
+                gamepassId: null
             }
         ];
 
         let currentUser = null;
         let currentView = 'home';
+        let currentProductId = null;
+        let currentGamepassId = null;
 
         window.onload = async function() {
-            const fragment = new URLSearchParams(window.location.hash.slice(1));
-            const accessToken = fragment.get('access_token');
+            const hash = window.location.hash.substring(1);
             
-            if (accessToken) {
-                await handleDiscordCallback(accessToken);
-                return;
+            if (hash) {
+                const params = new URLSearchParams(hash);
+                const accessToken = params.get('access_token');
+                
+                if (accessToken) {
+                    await handleDiscordCallback(accessToken);
+                    return;
+                }
             }
 
             const savedUser = localStorage.getItem('currentUser');
@@ -493,7 +680,9 @@
         };
 
         function loginWithDiscord() {
-            const authUrl = `https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=identify`;
+            const scope = 'identify';
+            const responseType = 'token';
+            const authUrl = `https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=${responseType}&scope=${scope}`;
             window.location.href = authUrl;
         }
 
@@ -501,17 +690,21 @@
             try {
                 const response = await fetch('https://discord.com/api/users/@me', {
                     headers: {
-                        Authorization: `Bearer ${accessToken}`
+                        'Authorization': `Bearer ${accessToken}`,
+                        'Content-Type': 'application/json'
                     }
                 });
 
-                if (!response.ok) throw new Error('Failed to fetch user data');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
 
                 const userData = await response.json();
                 
                 currentUser = {
                     username: userData.username,
                     userId: userData.id,
+                    discriminator: userData.discriminator,
                     globalName: userData.global_name || userData.username,
                     avatar: userData.avatar 
                         ? `https://cdn.discordapp.com/avatars/${userData.id}/${userData.avatar}.png`
@@ -522,8 +715,8 @@
 
                 await saveUserData();
                 localStorage.setItem('currentUser', JSON.stringify(currentUser));
-
-                window.history.replaceState(null, null, window.location.pathname);
+                
+                window.history.replaceState({}, document.title, window.location.pathname + window.location.search);
                 
                 showMainApp();
             } catch (error) {
@@ -561,28 +754,118 @@
             return currentUser.ownedProducts && currentUser.ownedProducts.includes(productId);
         }
 
-        function purchaseProduct(productId, gamepassUrl) {
-            if (!gamepassUrl) return;
-            
-            if (!currentUser.ownedProducts) {
-                currentUser.ownedProducts = [];
+        function purchaseProduct(productId, gamepassUrl, gamepassId) {
+            if (!gamepassUrl || !gamepassId) {
+                alert('This product is not available for purchase yet.');
+                return;
             }
             
-            if (!currentUser.ownedProducts.includes(productId)) {
-                currentUser.ownedProducts.push(productId);
-                saveUserData();
-                localStorage.setItem('currentUser', JSON.stringify(currentUser));
-            }
+            currentProductId = productId;
+            currentGamepassId = gamepassId;
+            
+            document.getElementById('verifyModalText').textContent = `Please verify your purchase of ${getProductName(productId)}. Make sure your Discord account is linked to Roblox via Bloxlink and your Roblox inventory is set to public.`;
+            document.getElementById('verifyStatus').innerHTML = '';
+            document.getElementById('verifyBtn').disabled = false;
+            document.getElementById('verifyBtn').textContent = 'Verify Purchase';
+            
+            openModal('verifyModal');
             
             window.open(gamepassUrl, '_blank');
+        }
+
+        async function verifyGamepassPurchase() {
+            const verifyBtn = document.getElementById('verifyBtn');
+            const verifyStatus = document.getElementById('verifyStatus');
             
-            setTimeout(() => {
-                renderProducts();
-            }, 1000);
+            verifyBtn.disabled = true;
+            verifyBtn.innerHTML = '<span class="loading"></span> Verifying...';
+            verifyStatus.innerHTML = '<div class="error">Checking Bloxlink connection...</div>';
+            
+            try {
+                // Step 1: Get Roblox ID from Discord ID via Bloxlink
+                const bloxlinkResponse = await fetch(`https://api.blox.link/v4/public/guilds/1/discord-to-roblox/${currentUser.userId}`, {
+                    headers: {
+                        'Authorization': BLOXLINK_API_KEY
+                    }
+                });
+                
+                if (!bloxlinkResponse.ok) {
+                    throw new Error('Discord account not linked to Roblox via Bloxlink');
+                }
+                
+                const bloxlinkData = await bloxlinkResponse.json();
+                const robloxId = bloxlinkData.robloxID;
+                
+                if (!robloxId) {
+                    throw new Error('Could not find Roblox ID. Please make sure your Discord is linked to Roblox via Bloxlink.');
+                }
+                
+                verifyStatus.innerHTML = '<div class="success">✓ Discord linked to Roblox. Checking gamepass ownership...</div>';
+                
+                // Step 2: Check if user owns the gamepass
+                const ownershipResponse = await fetch(`https://inventory.roblox.com/v1/users/${robloxId}/items/GamePass/${currentGamepassId}`);
+                
+                if (!ownershipResponse.ok) {
+                    throw new Error('Could not check Roblox inventory. Please make sure your inventory is set to public.');
+                }
+                
+                const ownershipData = await ownershipResponse.json();
+                
+                if (ownershipData.data && ownershipData.data.length > 0) {
+                    // User owns the gamepass
+                    if (!currentUser.ownedProducts) currentUser.ownedProducts = [];
+                    
+                    if (!currentUser.ownedProducts.includes(currentProductId)) {
+                        currentUser.ownedProducts.push(currentProductId);
+                        await saveUserData();
+                        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                        
+                        verifyStatus.innerHTML = '<div class="success">✓ Purchase verified! Product added to your account.</div>';
+                        verifyBtn.textContent = 'Verified ✓';
+                        
+                        setTimeout(() => {
+                            closeModal('verifyModal');
+                            renderProducts();
+                            if (currentView === 'products') renderOwnedProducts();
+                            alert('✅ Product verified and added to your account!');
+                        }, 2000);
+                    } else {
+                        verifyStatus.innerHTML = '<div class="success">✓ You already own this product!</div>';
+                        verifyBtn.textContent = 'Already Owned';
+                        
+                        setTimeout(() => {
+                            closeModal('verifyModal');
+                        }, 2000);
+                    }
+                } else {
+                    throw new Error('Gamepass not found in your inventory. Please make sure you purchased the gamepass and your inventory is set to public.');
+                }
+                
+            } catch (error) {
+                console.error('Verification error:', error);
+                verifyStatus.innerHTML = `<div class="error">❌ Verification failed: ${error.message}</div>`;
+                verifyBtn.disabled = false;
+                verifyBtn.textContent = 'Try Again';
+            }
+        }
+
+        function getProductName(productId) {
+            const product = PRODUCTS.find(p => p.id === productId);
+            return product ? product.name : 'Product';
         }
 
         function downloadProduct(productName) {
             alert(`Downloading ${productName}... This is a demo. In production, this would trigger the actual download.`);
+        }
+
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+            currentProductId = null;
+            currentGamepassId = null;
         }
 
         function renderProducts() {
@@ -603,9 +886,9 @@
                         <p class="product-description">${product.description}</p>
                         <div class="button-group">
                             <button class="purchase-btn" 
-                                    onclick="purchaseProduct('${product.id}', '${product.gamepassUrl}')"
-                                    ${!hasGamepass ? 'disabled' : ''}>
-                                Purchase
+                                    onclick="purchaseProduct('${product.id}', '${product.gamepassUrl}', '${product.gamepassId}')"
+                                    ${!hasGamepass || owned ? 'disabled' : ''}>
+                                ${owned ? 'Owned ✓' : 'Purchase'}
                             </button>
                             <button class="download-btn" 
                                     onclick="downloadProduct('${product.name}')"
@@ -664,6 +947,10 @@
             document.getElementById('userInfo').textContent = currentUser.username;
             document.getElementById('userAvatar').src = currentUser.avatar;
             
+            if (currentUser.isAdmin) {
+                document.getElementById('adminLink').classList.remove('hidden');
+            }
+            
             renderProducts();
             showHome();
         }
@@ -672,6 +959,7 @@
             currentView = 'home';
             document.getElementById('homeSection').classList.remove('hidden');
             document.getElementById('productsSection').classList.add('hidden');
+            document.getElementById('adminSection').classList.add('hidden');
             renderProducts();
         }
 
@@ -679,7 +967,113 @@
             currentView = 'products';
             document.getElementById('homeSection').classList.add('hidden');
             document.getElementById('productsSection').classList.remove('hidden');
+            document.getElementById('adminSection').classList.add('hidden');
             renderOwnedProducts();
+        }
+
+        function showAdmin() {
+            if (!currentUser || !currentUser.isAdmin) return;
+            
+            currentView = 'admin';
+            document.getElementById('homeSection').classList.add('hidden');
+            document.getElementById('productsSection').classList.add('hidden');
+            document.getElementById('adminSection').classList.remove('hidden');
+            renderAdminPanel();
+        }
+
+        function renderAdminPanel() {
+            const container = document.getElementById('adminContainer');
+            const allUsers = JSON.parse(localStorage.getItem('allUsers') || '{}');
+            const usersArray = Object.values(allUsers).filter(u => !ADMIN_USERS.includes(u.username));
+            
+            if (usersArray.length === 0) {
+                container.innerHTML = `<div class="no-products"><h2>👥 No Users Yet</h2><p>No regular users have registered yet.</p></div>`;
+                return;
+            }
+
+            let html = `
+                <div class="admin-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Discord ID</th>
+                                <th>Products Owned</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+
+            usersArray.forEach(user => {
+                const ownedProducts = user.ownedProducts || [];
+                const productCount = ownedProducts.length;
+                
+                html += `
+                    <tr>
+                        <td>
+                            <div class="user-row">
+                                <img src="${user.avatar}" alt="${user.username}" class="user-avatar-small">
+                                <div>
+                                    <strong>${user.username}</strong><br>
+                                    <small>${user.globalName || ''}</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td><code>${user.userId}</code></td>
+                        <td>${productCount} products</td>
+                        <td>
+                            ${PRODUCTS.map(product => {
+                                const owns = ownedProducts.includes(product.id);
+                                return `
+                                    <button class="license-toggle ${owns ? 'active' : ''}" 
+                                            onclick="toggleLicense('${user.userId}', '${product.id}')">
+                                        ${product.emoji} ${owns ? '✓' : '✗'}
+                                    </button>
+                                `;
+                            }).join('')}
+                        </td>
+                    </tr>
+                `;
+            });
+
+            html += `
+                        </tbody>
+                    </table>
+                </div>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        function toggleLicense(userId, productId) {
+            if (!currentUser.isAdmin) return;
+            
+            const users = JSON.parse(localStorage.getItem('allUsers') || '{}');
+            const user = users[userId];
+            
+            if (!user) return;
+            
+            if (!user.ownedProducts) user.ownedProducts = [];
+            
+            const index = user.ownedProducts.indexOf(productId);
+            if (index > -1) {
+                user.ownedProducts.splice(index, 1);
+            } else {
+                user.ownedProducts.push(productId);
+            }
+            
+            localStorage.setItem('allUsers', JSON.stringify(users));
+            
+            if (currentUser.userId === userId) {
+                currentUser.ownedProducts = user.ownedProducts;
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            }
+            
+            renderAdminPanel();
+            
+            if (currentView === 'home') renderProducts();
+            if (currentView === 'products') renderOwnedProducts();
         }
 
         function logout() {
